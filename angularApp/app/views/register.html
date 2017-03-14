@@ -1,0 +1,17 @@
+<form class="col-md-8 col-md-offset-2" ng-submit="register()">
+    <h2>
+        Register
+    </h2>
+    <p class="text-warning">
+        {{error_message}}
+    </p>
+    <input class="form-control" ng-model="user.username" placeholder="Username" type="username">
+        <br>
+            <input class="form-control" ng-model="user.password" placeholder="Password" type="password">
+                <br>
+                    <input class="btn btn-primary" type="submit" value="Log in"/>
+                </br>
+            </input>
+        </br>
+    </input>
+</form>
