@@ -1,17 +1,30 @@
 (function() {
-    angular.module('angularAppApp').controller('AuthController', function($scope, $rootScope, OAuth) {
-        $scope.login = function(user) {
+    angular.module('angularAppApp').controller('AuthController', function($http, DataService, $scope, $rootScope, OAuth, $location) {
+        $scope.login = function() {
             $scope.error_message = "";
-            $scope.user = {
-                username: user.username,
-                password: user.password
+            $rootScope.user = {
+                username: $scope.username,
+                password: $scope.password
             };
-            var res = OAuth.getAccessToken($scope.user);
-            res.then(function(data) {
+            /*   var res = OAuth.getAccessToken($scope.user);*/
+            DataService.getToken($scope.user).then(onSuccess, onError);
+
+            function onSuccess(data) {
                 $scope.arr = data;
                 console.log($scope.arr);
-            })
-            console.log(res);
+                console.log(OAuth.isAuthenticated());
+                if (OAuth.isAuthenticated()) {
+                    $rootScope.authenticated = true;
+                    $location.path('/');
+                }
+            }
+
+            function onError(data) {
+                console.log(data);
+                $scope.error_message = data.data.message;
+                $rootScope.authenticated = false;
+                $location.path('/login');
+            }
         }
     });
 })();

@@ -1,12 +1,4 @@
 'use strict';
-/**
- * @ngdoc overview
- * @name angularAppApp
- * @description
- * # angularAppApp
- *
- * Main module of the application.
- */
 var app = angular.module('angularAppApp', ['ngAnimate', 'ngCookies', 'ngResource', 'ngRoute', 'ngSanitize', 'ngTouch', 'angular-oauth2'])
 app.config(function($routeProvider, OAuthTokenProvider) {
     $routeProvider.when('/', {
@@ -33,7 +25,7 @@ app.config(function($routeProvider, OAuthTokenProvider) {
         }
     });
 });
-app.run(function($rootScope, OAuth) {
+app.run(function($rootScope, OAuth, $window, $location, $cookies) {
     OAuth.configure({
         baseUrl: 'http://energypremier.com/api/v1',
         clientId: '3',
@@ -42,4 +34,14 @@ app.run(function($rootScope, OAuth) {
         grantType: 'password',
         scope: '*'
     });
+    if (OAuth.isAuthenticated()) {
+        $rootScope.authenticated = true;
+    } else {
+        $rootScope.authenticated = false;
+    }
+    $rootScope.signout = function() {
+        $cookies.remove('token');
+        $rootScope.authenticated = false;
+        $location.path('/login');
+    }
 })
